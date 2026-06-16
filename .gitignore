@@ -1,0 +1,15 @@
+# Build output
+zaman
+*.o
+*.obj
+
+# Editor / OS
+*.swp
+*.swo
+*~
+.DS_Store
+.vscode/
+.idea/
+
+# Compiled assets
+*.exe
