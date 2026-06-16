@@ -1,5 +1,9 @@
 # Equalizer Zaman
 
+> **AI-generated project** — This entire codebase was written collaboratively with an AI coding assistant (opencode / deepseek-v4). The architecture, implementation, and documentation were produced through iterative human–AI pair programming.
+
+
+
 A retro-style audio spectrum equalizer that reacts to system audio and doubles as a fullscreen timer overlay — Pomodoro, countdown timer, and chronometer with lap recording.
 
 Originally prototyped as an HTML/CSS/JS canvas app, then rewritten in C/SDL2 for native performance. Integrated into the `zaman` timer application as a desktop background.
@@ -71,6 +75,7 @@ equalizer-zaman/
 - **Timer**: countdown with +/− minute/second adjustment, insert mode (press I, type digits right-to-left).
 - **Chronometer**: stopwatch with lap recording (L key).
 - Max duration: 24 hours.
+- **End-time estimate**: when a timer is running, "ends at HH:MM AM/PM" is shown below the progress bar.
 - Keyboard: `Space` start/pause, `R` reset, `H`/`L` cycle mode, `I` insert mode, `Q`/`Escape` quit.
 
 ## Dependencies
@@ -102,6 +107,7 @@ make
 |--------------|-----------------------------------|
 | `Space`      | Start / Pause timer               |
 | `R`          | Reset current timer               |
+|              | *(shows estimated end time when running)* |
 | `H` / `L`    | Cycle mode (Pomodoro → Timer → Chrono) |
 | `+` / `-`    | Adjust minutes (Timer mode)       |
 | `Shift+`+/-  | Adjust seconds (Timer mode)       |

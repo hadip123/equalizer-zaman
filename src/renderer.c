@@ -4,6 +4,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
+#include <time.h>
 
 static SDL_Window   *win    = NULL;
 static SDL_Renderer *rend   = NULL;
@@ -67,6 +68,16 @@ static void format_time(char *buf, int len, int total_seconds) {
         snprintf(buf, len, "%d:%02d:%02d", h, m, s);
     else
         snprintf(buf, len, "%02d:%02d", m, s);
+}
+
+static void format_end_at(char *buf, int len, int remaining_seconds) {
+    time_t t = time(NULL) + remaining_seconds;
+    struct tm *tm = localtime(&t);
+    int hour = tm->tm_hour;
+    const char *ampm = "AM";
+    if (hour >= 12) { ampm = "PM"; if (hour > 12) hour -= 12; }
+    if (hour == 0) hour = 12;
+    snprintf(buf, len, "ends at %d:%02d %s", hour, tm->tm_min, ampm);
 }
 
 static void reload_fonts(float scale) {
@@ -302,6 +313,25 @@ void renderer_draw(const float *bars, int count, int is_live, const TimerState *
                 hsv_to_rgb(160+ts->mode*60,0.6f,0.5f, &pr2,&pg2,&pb2);
             C(pr2, pg2, pb2, 220);
             SDL_RenderFillRect(rend, &(SDL_Rect){pb_x, pb_y, fw, pb_h});
+        }
+    }
+
+    /* ends-at display */
+    if ((ts->mode == 0 || ts->mode == 1) && ts->running && !ts->paused) {
+        int rem_s = 0;
+        if (ts->mode == 0) {
+            int dur = (ts->pomo_phase == 0) ? 1500000 : (ts->pomo_phase == 1) ? 300000 : 900000;
+            rem_s = (dur - ts->elapsed) / 1000;
+        } else {
+            rem_s = (ts->duration - ts->elapsed) / 1000;
+        }
+        if (rem_s > 0 && rem_s <= 86400) {
+            char end_buf[32];
+            format_end_at(end_buf, sizeof(end_buf), rem_s);
+            int ew = tw(end_buf, fnt_small);
+            int ex = px_p + (pw_p - ew) / 2;
+            int ey = pb_y + pb_h + (int)(4 * scale);
+            tx(ex, ey, end_buf, fnt_small, 140, 145, 150, 200);
         }
     }
 
